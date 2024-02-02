@@ -26,9 +26,12 @@
 	    list.add(map);
 	    map = new HashMap<String, Object>() {{ put("name", "반올림피자"); put("menu", "피자"); put("point", 4.3); } };
 	    list.add(map);
+	    
+	    String targetMenu = request.getParameter("menu");
+	    
+	    String option = request.getParameter("option");
 	
 	%>
-
 	<div class="container">
 	
 		<h1 class="text-center">검색 결과</h1>
@@ -43,16 +46,22 @@
 			</thead>
 			
 			<tbody>
-				<% for(Map<String, Object> store:list) {
+				<% for(Map<String, Object> store:list) { 
 					String menu = (String)store.get("menu");
-					if() {
-					%>
+					// 메뉴명 일치 조건
+					if(menu.equals(targetMenu)) {
+						// option이 null 일때
+						// option의 값이 on이고, 4점 초과 별점만 조회
+						double point = (Double)store.get("point");
+						if(option == null || point > 4) {
+				%>
 				<tr>
 					<td><%= store.get("menu") %></td>
 					<td><%= store.get("name") %></td>
 					<td><%= store.get("point") %></td>
 				</tr>
-				<% }
+				<% 		}
+					} 
 				} %>
 			
 			</tbody>
