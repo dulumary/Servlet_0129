@@ -90,7 +90,29 @@
 	    musicInfo.put("lyricist", "아이유");
 	    musicList.add(musicInfo);
 	    
-	    int target = Integer.parseInt(request.getParameter("id"));
+	    String idString = request.getParameter("id");
+	    String targetTitle = request.getParameter("title");
+	    
+	    Map<String, Object> targetMusic = null;
+	    for(Map<String, Object> music:musicList) {
+	    	if(idString != null) {  // id 파라미터가 전달된 경우 
+	    		int id = (Integer)music.get("id");
+	    		int targetId = Integer.parseInt(idString);
+	    		if(id == targetId) {
+	    			// 대상 music 맵 찾음
+	    			targetMusic = music;
+	    		}	
+	    	} else if(targetTitle != null) {  // title 파라미터가 전달된경우 
+	    		String title = (String)music.get("title");
+	    		if(title.equals(targetTitle)) {
+	    			// 대상 music 맵 찾음
+	    			targetMusic = music;
+	    		}
+	    		
+	    	}
+	    }
+	    
+	    int time = (Integer)targetMusic.get("time");
 	
 	%>
 	
@@ -98,35 +120,28 @@
 		<jsp:include page="header.jsp" />
 		<jsp:include page="menu.jsp" />
 		<section>
-			<% for(Map<String, Object> music:musicList) { 
-				int time = (Integer)music.get("time");
-				int id = (Integer)music.get("id"); 
-				
-				if(id == target) {
-			%>
+
 			<div class="music my-3">
 				<h3>곡 정보</h3>
 				<div class="d-flex border border-success p-3">
 					<div>
-						<img width="200" src="<%= music.get("thumbnail") %>">
+						<img width="200" src="<%= targetMusic.get("thumbnail") %>">
 					</div>
 					<div class="ml-3">
-						<div class="display-4"><%= music.get("title") %></div>
-						<div class="text-success font-weight-bold"><%= music.get("singer") %></div>
+						<div class="display-4"><%= targetMusic.get("title") %></div>
+						<div class="text-success font-weight-bold"><%= targetMusic.get("singer") %></div>
 						
 						<div class="small text-secondary mt-3">
-							<div>앨범 : <%= music.get("album") %></div>
+							<div>앨범 : <%= targetMusic.get("album") %></div>
 							<div>재생시간 : <%= time / 60 %>:<%= time % 60 %></div>
-							<div>작곡가 : <%= music.get("composer") %></div>
-							<div>작사가 : <%= music.get("lyricist") %></div>
+							<div>작곡가 : <%= targetMusic.get("composer") %></div>
+							<div>작사가 : <%= targetMusic.get("lyricist") %></div>
 						</div>
 						
 					</div>
 				</div>
 			</div>
-			<% 
-				}
-			} %>
+
 			<div class="my-4">
 				<h3>가사</h3>
 				<hr>
